@@ -1,24 +1,50 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import { useAuth } from "./hooks/useAuth";
+import LoginPage from "./pages/LoginPage";
+import HomePage from "./pages/HomePage";
+import ProtectedRoute, { RouteProps } from "./routes/ProtectedRoute";
+import "./App.css";
+import PublicRoute from "./routes/PublicRoute";
 
 function App() {
+  const { walletAddress } = useAuth();
+
+  const defaultProtectedRouteProps: Omit<RouteProps, "outlet"> = {
+    isAuthenticated: !!walletAddress,
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Routes>
+        <Route
+          index
+          element={
+            <PublicRoute
+              {...defaultProtectedRouteProps}
+              outlet={<LoginPage />}
+            />
+          }
+        />
+        <Route
+          path="login"
+          element={
+            <PublicRoute
+              {...defaultProtectedRouteProps}
+              outlet={<LoginPage />}
+            />
+          }
+        />
+        <Route
+          path="home"
+          element={
+            <ProtectedRoute
+              {...defaultProtectedRouteProps}
+              outlet={<HomePage />}
+            />
+          }
+        />
+      </Routes>
     </div>
   );
 }
