@@ -10,17 +10,11 @@ import {
   META_TITLE,
 } from "../../constants/LoginPageConstants";
 import "./LoginPage.css";
-import { useLocalStorage } from "../../hooks/useLocalStorage";
 
 const { Meta } = Card;
 
 const LoginPage: React.FC = () => {
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
-  const [walletAddress, setWalletAddress] = useLocalStorage(
-    "WALLET_ADDRESS",
-    null
-  );
-
   const { connectToWallet } = useWallet();
 
   const handleClick = async (
