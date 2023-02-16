@@ -3,15 +3,25 @@ import { Card, Avatar } from "antd";
 import { LoginOutlined } from "@ant-design/icons";
 import { Navigate } from "react-router-dom";
 
-import { useAuth } from "../hooks/useAuth";
-import logo from "../assets/logo.svg";
+import { useWallet } from "../../hooks/useWallet";
+import logo from "../../assets/logo.svg";
+import {
+  META_DESCRIPTION,
+  META_TITLE,
+} from "../../constants/LoginPageConstants";
+import "./LoginPage.css";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
 
 const { Meta } = Card;
 
 const LoginPage: React.FC = () => {
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [walletAddress, setWalletAddress] = useLocalStorage(
+    "WALLET_ADDRESS",
+    null
+  );
 
-  const { connectToWallet } = useAuth();
+  const { connectToWallet } = useWallet();
 
   const handleClick = async (
     event: React.MouseEvent<HTMLSpanElement, MouseEvent>
@@ -20,7 +30,7 @@ const LoginPage: React.FC = () => {
     setIsProcessing(true);
 
     try {
-      connectToWallet();
+      await connectToWallet();
       setIsProcessing(false);
       <Navigate to={"/home"} replace />;
     } catch (e: any) {
@@ -29,14 +39,7 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-      }}
-    >
+    <div className="container">
       <Card
         bordered={true}
         style={{ width: 300 }}
@@ -55,9 +58,8 @@ const LoginPage: React.FC = () => {
       >
         <Meta
           avatar={<Avatar src={logo} />}
-          title="Whitehat Assignment"
-          description="A react application that demonstrates react-hooks, react-query, and Web3
-            implementation. Please click the button below to connect to your Metamask wallet."
+          title={META_TITLE}
+          description={META_DESCRIPTION}
         />
       </Card>
     </div>

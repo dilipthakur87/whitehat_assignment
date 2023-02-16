@@ -1,14 +1,16 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import { useAuth } from "./hooks/useAuth";
-import LoginPage from "./pages/LoginPage";
-import HomePage from "./pages/HomePage";
-import ProtectedRoute, { RouteProps } from "./routes/ProtectedRoute";
-import "./App.css";
+
+import { useWallet } from "./hooks/useWallet";
+import LoginPage from "./pages/LoginPage/LoginPage";
+import HomePage from "./pages/HomePage/HomePage";
+import ProtectedRoute from "./routes/ProtectedRoute";
 import PublicRoute from "./routes/PublicRoute";
+import { RouteProps } from "./routes/types";
+import "./App.css";
 
 function App() {
-  const { walletAddress } = useAuth();
+  const { walletAddress } = useWallet();
 
   const defaultProtectedRouteProps: Omit<RouteProps, "outlet"> = {
     isAuthenticated: !!walletAddress,

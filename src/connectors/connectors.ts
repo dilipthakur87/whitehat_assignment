@@ -1,5 +1,6 @@
 import { InjectedConnector } from "@web3-react/injected-connector";
+import { SEPOLIA_CHAINID } from "../constants/ConnectorConstants";
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [11155111], // chainId for Sepolia test network
+  supportedChainIds: [SEPOLIA_CHAINID], // chainId for Sepolia test network
 });
