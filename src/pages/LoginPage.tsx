@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Card, Avatar } from "antd";
 import { LoginOutlined } from "@ant-design/icons";
 import { Navigate } from "react-router-dom";
 
 import { useAuth } from "../hooks/useAuth";
-import logo from "../logo.svg";
+import logo from "../assets/logo.svg";
 
 const { Meta } = Card;
 
@@ -12,10 +12,6 @@ const LoginPage: React.FC = () => {
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
   const { connectToWallet } = useAuth();
-
-  useEffect(() => {
-    console.log(" asdafdsfa = ", isProcessing);
-  }, [isProcessing]);
 
   const handleClick = async (
     event: React.MouseEvent<HTMLSpanElement, MouseEvent>
@@ -26,10 +22,8 @@ const LoginPage: React.FC = () => {
     try {
       connectToWallet();
       setIsProcessing(false);
-
       <Navigate to={"/home"} replace />;
     } catch (e: any) {
-      console.log(" error connecting == ", e);
       setIsProcessing(false);
     }
   };
@@ -49,7 +43,7 @@ const LoginPage: React.FC = () => {
         cover={<img alt="Logo" src={logo} />}
         actions={[
           <LoginOutlined
-            key="Login/Connect"
+            key="login"
             spin={isProcessing}
             style={{ fontSize: "25px", color: "#08c" }}
             title="Login/Connect"
