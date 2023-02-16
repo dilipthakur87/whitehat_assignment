@@ -1,0 +1,1 @@
+export const SEPOLIA_CHAINID = 11155111;

@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import { RouteProps } from "./ProtectedRoute";
+import { RouteProps } from "./types";
 
 export default function PublicRoute({ isAuthenticated, outlet }: RouteProps) {
   if (!isAuthenticated) {

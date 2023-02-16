@@ -7,7 +7,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { AuthProvider } from "./hooks/useAuth";
+import { WalletProvider } from "./hooks/useWallet";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -36,11 +36,11 @@ root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <Web3ReactProvider getLibrary={getLibrary}>
-        <AuthProvider>
+        <WalletProvider>
           <BrowserRouter>
             <App />
           </BrowserRouter>
-        </AuthProvider>
+        </WalletProvider>
       </Web3ReactProvider>
     </QueryClientProvider>
   </React.StrictMode>

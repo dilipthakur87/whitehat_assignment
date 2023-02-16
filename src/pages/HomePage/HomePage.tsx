@@ -1,27 +1,20 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import NavBarComponent from "../components/NavBarComponent";
 import { useQuery } from "react-query";
-import { useAuth } from "../hooks/useAuth";
-import { getTestDataService } from "../services/getTestDataService";
-import LoadingComponent from "../components/LoadingComponent";
 import { Table } from "antd";
-
-const columns = [
-  { title: "ID", dataIndex: "id", key: "id" },
-  { title: "Name", dataIndex: "name", key: "name" },
-  { title: "Email", dataIndex: "email", key: "email" },
-  { title: "Phone", dataIndex: "phone", key: "phone" },
-];
+import NavBarComponent from "../../components/NavBarComponent/NavBarComponent";
+import { useWallet } from "../../hooks/useWallet";
+import { getTestDataService } from "../../services/getTestDataService";
+import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
+import { columns, TEST_DATA } from "../../constants/HomePageConstants";
+import "./HomePage.css";
+import { useWeb3React } from "@web3-react/core";
 
 const HomePage = () => {
-  const { walletAddress, disconnectFromWallet } = useAuth();
+  const { walletAddress, disconnectFromWallet } = useWallet();
 
   // using react-query to fetch data and manage the state/status
-  const { data, error, isLoading } = useQuery(
-    "RANDOM_FACTS_TEST",
-    getTestDataService
-  );
+  const { data, error, isLoading } = useQuery(TEST_DATA, getTestDataService);
 
   const handleDisconnect = async (
     event: React.MouseEvent<HTMLSpanElement, MouseEvent>
@@ -43,16 +36,14 @@ const HomePage = () => {
           handleDisconnect(e)
         }
       />
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
+      <div className="container">
         {isLoading ? (
-          <LoadingComponent />
+          <LoadingComponent
+            spinnerText="Loading"
+            alertMessage="Please wait"
+            alertDescription="We are currently fetching your data."
+            alertType="info"
+          />
         ) : error ? (
           <div> Error! </div>
         ) : (

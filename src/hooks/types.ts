@@ -4,7 +4,7 @@ export type AuthProviderProps = {
   children: React.ReactNode;
 };
 
-export type AuthState = {
+export type UseWalletState = {
   walletAddress: string | null;
   connectToWallet: ConnectType;
   disconnectFromWallet: DisconnectType;

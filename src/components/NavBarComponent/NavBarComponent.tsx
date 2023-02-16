@@ -1,27 +1,12 @@
 import React from "react";
 import { LogoutOutlined } from "@ant-design/icons";
-import "../App.css";
-
-interface NavBarComponentProps {
-  walletAddress: string | null;
-  onClick: (
-    event: React.MouseEvent<HTMLSpanElement, MouseEvent>
-  ) => Promise<void>;
-  loading?: boolean;
-  disabled?: boolean;
-}
+import { NavBarComponentProps } from "../../constants/interface/ComponentsInterface";
+import "./NavBarComponent.css";
 
 const NavBarComponent = (props: NavBarComponentProps) => {
   return (
     <nav className="menuBar">
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
+      <div className="menuContainer">
         <div className="logo">
           <img
             src="https://whitehatengineering.com/wp-content/uploads/2020/04/whitehat-1.png"
@@ -31,13 +16,15 @@ const NavBarComponent = (props: NavBarComponentProps) => {
 
         <div className="menuCon">
           <label>
-            {props.walletAddress ? "Address: " + props.walletAddress : "null"}
+            {props.walletAddress
+              ? "Address: " + props.walletAddress
+              : "--------"}
           </label>
           <LogoutOutlined
             key="logout"
             spin={props?.loading}
             disabled={props?.disabled}
-            style={{ fontSize: "25px", color: "#000", padding: "20px" }}
+            className="logoutLogo"
             title="Logout/Disconnect"
             onClick={(event: React.MouseEvent<HTMLSpanElement, MouseEvent>) =>
               props.onClick(event)

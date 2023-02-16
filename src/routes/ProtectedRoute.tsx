@@ -1,10 +1,5 @@
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
-
-export type RouteProps = {
-  isAuthenticated: boolean;
-  outlet: JSX.Element;
-};
+import { RouteProps } from "./types";
 
 export default function ProtectedRoute({
   isAuthenticated,

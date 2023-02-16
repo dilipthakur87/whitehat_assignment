@@ -1,67 +1,62 @@
-import React, { createContext, useContext, useMemo, useState } from "react";
+import React, { createContext, useContext, useEffect } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { injected } from "../connectors/connectors";
 import {
-  AuthState,
+  UseWalletState,
   AuthProviderProps,
   ConnectType,
   DisconnectType,
 } from "./types";
 import { useLocalStorage } from "./useLocalStorage";
+import {
+  HEX_CHAINID,
+  SEPOLIA_CONNECTION_DATA,
+} from "../constants/WalletConstants";
 
-const AuthContext = createContext<AuthState | undefined>(undefined);
+const WallerContext = createContext<UseWalletState | undefined>(undefined);
 
-const AuthProvider = ({ children }: AuthProviderProps) => {
+const WalletProvider = ({ children }: AuthProviderProps) => {
   const [walletAddress, setWalletAddress] = useLocalStorage(
     "WALLET_ADDRESS",
     null
   );
 
   let { ethereum } = window as any;
-  const hexChainId = "0x" + Number(11155111).toString(16);
-  const data = [
-    {
-      chainId: hexChainId,
-      chainName: "Sepolia test network",
-      nativeCurrency: {
-        name: "SepoliaETH",
-        symbol: "SepoliaETH",
-        decimals: 18,
-      },
-      rpcUrls: "https://sepolia.infura.io/v3/",
-      blockExplorerUrls: ["https://sepolia.etherscan.io"],
-    },
-  ];
 
-  const { account, activate, deactivate } = useWeb3React();
+  const { active, account, activate, deactivate } = useWeb3React();
+
+  useEffect(() => {
+    if (active && account) {
+      setWalletAddress(account);
+    }
+  }, [active, account]);
 
   // call this function when you want to connect the user to metamask wallet
   const connectToWallet: ConnectType = async () => {
     if (ethereum !== "undefined") {
       try {
+        console.log("here");
+
         await ethereum.request({
           method: "wallet_switchEthereumChain",
-          params: [{ chainId: hexChainId }],
+          params: [{ chainId: HEX_CHAINID }],
         });
-        activate(injected);
+        await activate(injected);
       } catch (switchErr: any) {
         if (switchErr?.code !== 4001 && switchErr?.code !== -32002) {
           try {
             await ethereum.request({
               method: "wallet_addEthereumChain",
-              params: data,
+              params: SEPOLIA_CONNECTION_DATA,
             });
-            activate(injected);
+            await activate(injected);
           } catch (addError) {
-            if (process.env.REACT_APP_DEV_ENV === "development") {
-              console.log(addError);
-            }
+            console.log(addError);
           }
         } else {
-          console.log(" Couldn't Connect. ");
+          alert(" Couldn't Connect. ");
         }
       }
-      setWalletAddress(account ? account.toString() : null);
     } else {
       alert(
         " Seems like you haven't installed Metamask. Please make sure to install it to your browser to use this application."
@@ -72,7 +67,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   // call this function to disconnect the user
   const disconnectFromWallet: DisconnectType = async () => {
     try {
-      deactivate();
+      await deactivate();
       setWalletAddress(null);
     } catch (error: any) {
       console.log("disconnect errrr ", error);
@@ -85,17 +80,19 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     disconnectFromWallet,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <WallerContext.Provider value={value}>{children}</WallerContext.Provider>
+  );
 };
 
-const useAuth = () => {
-  const context = useContext(AuthContext);
+const useWallet = () => {
+  const context = useContext(WallerContext);
 
   if (context === undefined) {
-    throw new Error("useAuth must be used within a AuthProvider");
+    throw new Error("useWallet must be used within a WalletProvider");
   }
 
   return context;
 };
 
-export { AuthProvider, useAuth };
+export { WalletProvider, useWallet };
